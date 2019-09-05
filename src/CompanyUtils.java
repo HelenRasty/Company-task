@@ -1,7 +1,10 @@
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class CompanyUtils {
+    Scanner scanner = new Scanner(System.in);
 
     public String findEmployeeHighSalary(Company company) {
         Employee[] employees = company.getEmployees();
@@ -16,6 +19,17 @@ public class CompanyUtils {
         return maxSalaryEmployee.getName();
     }
 
+    public boolean isUserAnswerYes(){
+        boolean flag;
+        String answer = scanner.nextLine();
+        if (answer.contentEquals("y") || (answer.contentEquals("yes"))) {
+            flag = true;
+        } else {
+            flag = false;
+        }
+        return flag;
+    }
+
     public Company addNewEmployee(Company company, Employee employee, Long minPossibleSalary) {
         Employee[] employees = company.getEmployees();
         Employee[] employeesNewArray = Arrays.copyOf(employees, employees.length + 1);
@@ -23,11 +37,11 @@ public class CompanyUtils {
         employeesNewArray[employeesNewArray.length - 1] = employee;
 
         if (employee.getSalary() >= minPossibleSalary) {
-            System.out.println("Status: OK. Employee's salary " +
+            System.out.println("   Status: OK. Employee's salary " +
                     employee.getSalary() + " is >= min possible salary in the company " + minPossibleSalary);
             company.setEmployees(employeesNewArray);
         } else {
-            System.out.println("Status: ERROR. Employee's salary " +
+            System.out.println("   Status: ERROR. Employee's salary " +
                     employee.getSalary() + " is < min possible salary in the company " + minPossibleSalary
                     + ". The Salary is changed to min possible!");
             employee.setSalary(minPossibleSalary);
@@ -75,7 +89,7 @@ public class CompanyUtils {
             expAmount = employees[i].getSalary() + expAmount;
         }
 
-        avgSalary = BigDecimal.valueOf(expAmount).divide(BigDecimal.valueOf(employees.length));
+        avgSalary = BigDecimal.valueOf(expAmount).divide(BigDecimal.valueOf(employees.length), 2, RoundingMode.HALF_UP);
         return avgSalary;
     }
 
